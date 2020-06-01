@@ -362,6 +362,18 @@ namespace ethosIQ_Repost_Tool
             int CurrentReport = 1;
             int Percentage = 0;
 
+            /*
+            List<HistoricalOutput> outputs = new List<HistoricalOutput>();
+
+            if (ftpDataGridView.Rows.Count > 0)
+            {
+                foreach (DataGridViewRow row in ftpDataGridView.SelectedRows)
+                {
+                    outputs.Add(HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[1].Value.ToString() &&
+                                                      x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[3].Value)).FirstOrDefault());
+                }
+            }
+            */
             foreach (RepostReport report in Reports)
             {
                 if (repostWorker.CancellationPending == false)
@@ -504,12 +516,61 @@ namespace ethosIQ_Repost_Tool
                             eventLog.WriteEntry("Failed to write data to file: " + FilePath + ". " + exception.Message, EventLogEntryType.Error);
                         }
 
+                        /*
+                        List<HistoricalOutput> outputs = new List<HistoricalOutput>();
+
+                        if (ftpDataGridView.Rows.Count > 0)
+                        {
+                            foreach(DataGridViewRow row in ftpDataGridView.SelectedRows)
+                            {
+                                outputs.Add(HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[1].Value.ToString() &&
+                                                                  x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[3].Value)).FirstOrDefault());
+                            }
+                        }
+                        */
+
+                        if (HistoricalOutputs.Count > 0)
+                        {
+                            try
+                            {
+                                foreach (HistoricalOutput output in HistoricalOutputs)
+                                {
+                                    try
+                                    {
+                                        output.SendFile(FilePath, FileName);
+                                        report.Pass = true;
+                                        MessageBox.Show("Successfully FTP'd!", "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
+                                    catch(Exception exception)
+                                    {
+                                        if (exception?.InnerException?.Message != null)
+                                        {
+                                            MessageBox.Show("Failed to send file to " + output.Name + ". " + exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+
+                                        MessageBox.Show(exception.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                if (exception?.InnerException?.Message != null)
+                                {
+                                    MessageBox.Show(exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+
+                                MessageBox.Show(exception.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+
+                        /*
                         foreach (HistoricalOutput historicalOutput in HistoricalOutputs)
                         {
                             historicalOutput.SendFile(FilePath, FileName);
 
                             report.Pass = true;
                         }
+                        */
                     }
                     catch (Exception exception)
                     {

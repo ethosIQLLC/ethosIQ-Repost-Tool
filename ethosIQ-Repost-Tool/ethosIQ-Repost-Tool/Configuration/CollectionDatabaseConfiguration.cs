@@ -38,26 +38,53 @@ namespace ethosIQ_Repost_Tool.Configuration
                         {
                             while (reader.Read())
                             {
-                                if (Convert.ToDouble(reader["HEARTBEATINTERVAL"]) == 0)
+                                try
                                 {
-                                    CollectionDatabase = DatabaseFactory.CreateDatabase(reader["TYPE"].ToString(),
-                                                                                        reader["DATASOURCE"].ToString(),
-                                                                                        reader["SERVER"].ToString(),
-                                                                                        Convert.ToInt32(reader["PORT"]),
-                                                                                        reader["USERNAME"].ToString(),
-                                                                                        reader["PASSWORD"].ToString());
+                                    if (Convert.ToDouble(reader["HEARTBEATINTERVAL"]) == 0)
+                                    {
+                                        CollectionDatabase = DatabaseFactory.CreateDatabase(reader["TYPE"].ToString(),
+                                                                                            reader["DATASOURCE"].ToString(),
+                                                                                            reader["SERVER"].ToString(),
+                                                                                            Convert.ToInt32(reader["PORT"]),
+                                                                                            reader["USERNAME"].ToString(),
+                                                                                            reader["PASSWORD"].ToString(),
+                                                                                            180,
+                                                                                            1,
+                                                                                            5);
+                                    }
+                                    else
+                                    {
+                                        CollectionDatabase = DatabaseFactory.CreateDatabase(reader["TYPE"].ToString(),
+                                                        reader["DATASOURCE"].ToString(),
+                                                        reader["SERVER"].ToString(),
+                                                        Convert.ToInt32(reader["PORT"]),
+                                                        reader["USERNAME"].ToString(),
+                                                        reader["PASSWORD"].ToString(),
+                                                        180,
+                                                        1,
+                                                        5);
+                                    }
                                 }
-                                else
+                                catch(Exception e)
+                                {
+                                    Console.WriteLine("No Heartbeat");
+                                }
+
+                                try
                                 {
                                     CollectionDatabase = DatabaseFactory.CreateDatabase(reader["TYPE"].ToString(),
-                                                    reader["DATASOURCE"].ToString(),
-                                                    reader["SERVER"].ToString(),
-                                                    Convert.ToInt32(reader["PORT"]),
-                                                    reader["USERNAME"].ToString(),
-                                                    reader["PASSWORD"].ToString(),
-                                                    30,
-                                                    1,
-                                                    5);
+                                                                                            reader["DATASOURCE"].ToString(),
+                                                                                            reader["SERVER"].ToString(),
+                                                                                            Convert.ToInt32(reader["PORT"]),
+                                                                                            reader["USERNAME"].ToString(),
+                                                                                            reader["PASSWORD"].ToString(),
+                                                                                            180,
+                                                                                            1,
+                                                                                            5);
+                                }
+                                catch(Exception e)
+                                {
+
                                 }
                             }
                         }

@@ -31,6 +31,8 @@ namespace ethosIQ_Repost_Tool.DAO
 
                     if (Database.DatabaseType == DatabaseType.MsSql)
                     {
+                        command.CommandTimeout = 0;
+
                         IDataParameter startTime = Database.CreateParameter("@StartTime", StartTime);
                         startTime.Direction = ParameterDirection.Input;
                         IDataParameter endTime = Database.CreateParameter("@EndTime", EndTime);
@@ -91,6 +93,8 @@ namespace ethosIQ_Repost_Tool.DAO
 
                     if (Database.DatabaseType == DatabaseType.MsSql)
                     {
+                        command.CommandTimeout = 0;
+
                         IDataParameter startTime = Database.CreateParameter("@StartTime", StartTime);
                         startTime.Direction = ParameterDirection.Input;
                         IDataParameter endTime = Database.CreateParameter("@EndTime", EndTime);

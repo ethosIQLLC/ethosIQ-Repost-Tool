@@ -300,9 +300,15 @@ namespace ethosIQ_Repost_Tool
 
             if(ftpDataGridView.Rows.Count > 0)
             {
-                output = HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[1].Value.ToString() &&
-                                                      x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[3].Value)).FirstOrDefault();
+                
+                output = HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[2].Value.ToString() &&
+                                                      x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[4].Value)).FirstOrDefault();
+                                                      
+                //output = HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[2].Value.ToString()).FirstOrDefault();
+
             }
+
+            
 
             if(output != null)
             {
@@ -320,6 +326,10 @@ namespace ethosIQ_Repost_Tool
 
                     MessageBox.Show(exception.Message, "Check FTP Connection", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            else
+            {
+                MessageBox.Show("An output must be selected! ", "Select FTP Connection", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -539,7 +549,7 @@ namespace ethosIQ_Repost_Tool
                                     {
                                         output.SendFile(FilePath, FileName);
                                         report.Pass = true;
-                                        MessageBox.Show("Successfully FTP'd!", "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        //MessageBox.Show("Successfully FTP'd!", "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     }
                                     catch(Exception exception)
                                     {

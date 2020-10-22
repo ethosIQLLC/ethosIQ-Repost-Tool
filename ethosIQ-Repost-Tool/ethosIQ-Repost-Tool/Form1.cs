@@ -135,11 +135,11 @@ namespace ethosIQ_Repost_Tool
         {
             if (!EventLog.SourceExists("Repost"))
             {
-                EventLog.CreateEventSource("Repost", "eIQ-Repost-Tool");
+                EventLog.CreateEventSource("Repost", "WFM Historical Service");
             }
 
             eventLog = new EventLog();
-            eventLog.Log = "eIQ-Repost-Tool";
+            eventLog.Log = "WFM Historical Service";
             eventLog.Source = "Repost";
 
             try
@@ -340,6 +340,9 @@ namespace ethosIQ_Repost_Tool
 
         private void repostWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            multiMediaCheckBox.Invoke(new Action(() => multiMediaCheckBox.Enabled = false));
+            fifteenRadioButton.Invoke(new Action(() => fifteenRadioButton.Enabled = false));
+            thirtyMinuteRadioButton.Invoke(new Action(() => thirtyMinuteRadioButton.Enabled = false));
             repostButton.Invoke(new Action(() => repostButton.Enabled = false));
 
             List<RepostReport> Reports = new List<RepostReport>();
@@ -367,7 +370,7 @@ namespace ethosIQ_Repost_Tool
                 TempEndTimeSeconds = TempEndTimeSeconds + IntervalInMinutes * 60;
             }
 
-            HistoricalSource historicalSource = new HistoricalSource("ethosIQ-Repost-Tool", CollectionDatabase);
+            HistoricalSource historicalSource = new HistoricalSource("Collection Database", CollectionDatabase);
 
             int CurrentReport = 1;
             int Percentage = 0;
@@ -384,227 +387,240 @@ namespace ethosIQ_Repost_Tool
                 }
             }
             */
-            foreach (RepostReport report in Reports)
+            DialogResult result = MessageBox.Show("Are you sure you want to repost " + Reports.Count + " reports?", "Verify Repost", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
             {
-                if (repostWorker.CancellationPending == false)
+
+                foreach (RepostReport report in Reports)
                 {
-                    try
+                    if (repostWorker.CancellationPending == false)
                     {
-                        ContactTypeReport contactTypeReport;
-                        ContactTypeMMReport contactTypeMMReport;
-                        AgentContactTypeReport agentContactTypeReport;
-                        AgentSystemPerformanceReport agentSystemPerformanceReport;
-
-                        string FilePath = LocalDirectory + @"\" + report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
-                        string FileName = report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
-
-                        contactTypeReport = new ContactTypeReport(report.StartTime);
-                        contactTypeMMReport = new ContactTypeMMReport(report.StartTime);
-                        agentContactTypeReport = new AgentContactTypeReport(report.StartTime);
-                        agentSystemPerformanceReport = new AgentSystemPerformanceReport(report.StartTime);
-
-                        Writer = new StreamWriter(FilePath);
-
-                        Console.WriteLine(report.StartTime.ToString() + ": ");
-
                         try
                         {
-                            if (multiMediaCheckBox.Checked)
-                            {
-                                foreach (ContactTypeMM contactType in historicalSource.GetContactTypeMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    contactTypeMMReport.ContactTypes.Add(contactType);
-                                }
+                            ContactTypeReport contactTypeReport;
+                            ContactTypeMMReport contactTypeMMReport;
+                            AgentContactTypeReport agentContactTypeReport;
+                            AgentSystemPerformanceReport agentSystemPerformanceReport;
 
-                                Console.WriteLine(historicalSource.Name + " - ContactType Count: " + contactTypeReport.ContactTypes.Count);
-                            }
-                            else
-                            {
-                                foreach (ContactType contactType in historicalSource.GetContactTypeReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    contactTypeReport.ContactTypes.Add(contactType);
-                                }
+                            string FilePath = LocalDirectory + @"\" + report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
+                            string FileName = report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
 
-                                Console.WriteLine(historicalSource.Name + " - ContactType Count: " + contactTypeReport.ContactTypes.Count);
-                            }
+                            contactTypeReport = new ContactTypeReport(report.StartTime);
+                            contactTypeMMReport = new ContactTypeMMReport(report.StartTime);
+                            agentContactTypeReport = new AgentContactTypeReport(report.StartTime);
+                            agentSystemPerformanceReport = new AgentSystemPerformanceReport(report.StartTime);
 
-                            if (multiMediaCheckBox.Checked)
-                            {
-                                foreach (AgentContactType agentContactType in historicalSource.GetAgentContactTypeMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    agentContactTypeReport.AgentContactTypes.Add(agentContactType);
-                                }
+                            Writer = new StreamWriter(FilePath);
 
-                                Console.WriteLine(historicalSource.Name + " - AgentContactType Count: " + agentContactTypeReport.AgentContactTypes.Count);
-                            }
-                            else
-                            {
-                                foreach (AgentContactType agentContactType in historicalSource.GetAgentContactTypeReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    agentContactTypeReport.AgentContactTypes.Add(agentContactType);
-                                }
+                            Console.WriteLine(report.StartTime.ToString() + ": ");
 
-                                Console.WriteLine(historicalSource.Name + " - AgentContactType Count: " + agentContactTypeReport.AgentContactTypes.Count);
-                            }
-
-                            if (multiMediaCheckBox.Checked)
-                            {
-                                foreach (AgentSystemPerformance agentSystemPerformance in historicalSource.GetAgentSystemPerformanceMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    agentSystemPerformanceReport.AgentSystemPerformances.Add(agentSystemPerformance);
-                                }
-
-                                Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
-                            }
-                            else
-                            {
-                                foreach (AgentSystemPerformance agentSystemPerformance in historicalSource.GetAgentSystemPerformanceReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
-                                {
-                                    agentSystemPerformanceReport.AgentSystemPerformances.Add(agentSystemPerformance);
-                                }
-
-                                Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
-                            }
-                        }
-                        catch (Exception exception)
-                        {
-                            eventLog.WriteEntry("Failed to pull data from source: " + historicalSource.Name + ". " + exception.Message, EventLogEntryType.Error);
-                        }
-
-                        try
-                        {
-                            if (multiMediaCheckBox.Checked)
-                            {
-                                Writer.WriteLine(contactTypeMMReport.Name);
-                                Writer.WriteLine(contactTypeMMReport.ReportTimeString);
-                                Writer.WriteLine(contactTypeMMReport.ColumnHeader);
-                                foreach (ContactTypeMM contactType in contactTypeMMReport.ContactTypes)
-                                {
-                                    Writer.WriteLine(contactType.ToString());
-                                }
-                                Writer.WriteLine(contactTypeMMReport.EndName);
-                            }
-                            else
-                            {
-                                Writer.WriteLine(contactTypeReport.Name);
-                                Writer.WriteLine(contactTypeReport.ReportTimeString);
-                                Writer.WriteLine(contactTypeReport.ColumnHeader);
-                                foreach (ContactType contactType in contactTypeReport.ContactTypes)
-                                {
-                                    Writer.WriteLine(contactType.ToString());
-                                }
-                                Writer.WriteLine(contactTypeReport.EndName);
-                            }
-
-                            Writer.WriteLine(agentContactTypeReport.Name);
-                            Writer.WriteLine(agentContactTypeReport.ReportTimeString);
-                            Writer.WriteLine(agentContactTypeReport.ColumnHeader);
-                            foreach (AgentContactType agentContactType in agentContactTypeReport.AgentContactTypes)
-                            {
-                                Writer.WriteLine(agentContactType.ToString());
-                            }
-                            Writer.WriteLine(agentContactTypeReport.EndName);
-
-                            Writer.WriteLine(agentSystemPerformanceReport.Name);
-                            Writer.WriteLine(agentSystemPerformanceReport.ReportTimeString);
-                            Writer.WriteLine(agentSystemPerformanceReport.ColumnHeader);
-
-                            foreach (AgentSystemPerformance agentSystemPerformance in agentSystemPerformanceReport.AgentSystemPerformances)
-                            {
-                                Writer.WriteLine(agentSystemPerformance.ToString());
-                            }
-
-                            Writer.WriteLine(agentSystemPerformanceReport.EndName);
-
-                            Writer.Flush();
-                            Writer.Close();
-
-                            //eventLog.WriteEntry("Successfully wrote data to file: " + FilePath + ". ", EventLogEntryType.Information);
-                        }
-                        catch (Exception exception)
-                        {
-                            eventLog.WriteEntry("Failed to write data to file: " + FilePath + ". " + exception.Message, EventLogEntryType.Error);
-                        }
-
-                        /*
-                        List<HistoricalOutput> outputs = new List<HistoricalOutput>();
-
-                        if (ftpDataGridView.Rows.Count > 0)
-                        {
-                            foreach(DataGridViewRow row in ftpDataGridView.SelectedRows)
-                            {
-                                outputs.Add(HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[1].Value.ToString() &&
-                                                                  x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[3].Value)).FirstOrDefault());
-                            }
-                        }
-                        */
-
-                        if (HistoricalOutputs.Count > 0)
-                        {
                             try
                             {
-                                foreach (HistoricalOutput output in HistoricalOutputs)
+                                if (multiMediaCheckBox.Checked)
+                                {
+                                    foreach (ContactTypeMM contactType in historicalSource.GetContactTypeMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        contactTypeMMReport.ContactTypes.Add(contactType);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - ContactType Count: " + contactTypeReport.ContactTypes.Count);
+                                }
+                                else
+                                {
+                                    foreach (ContactType contactType in historicalSource.GetContactTypeReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        contactTypeReport.ContactTypes.Add(contactType);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - ContactType Count: " + contactTypeReport.ContactTypes.Count);
+                                }
+
+                                if (multiMediaCheckBox.Checked)
+                                {
+                                    foreach (AgentContactType agentContactType in historicalSource.GetAgentContactTypeMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        agentContactTypeReport.AgentContactTypes.Add(agentContactType);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - AgentContactType Count: " + agentContactTypeReport.AgentContactTypes.Count);
+                                }
+                                else
+                                {
+                                    foreach (AgentContactType agentContactType in historicalSource.GetAgentContactTypeReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        agentContactTypeReport.AgentContactTypes.Add(agentContactType);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - AgentContactType Count: " + agentContactTypeReport.AgentContactTypes.Count);
+                                }
+
+                                if (multiMediaCheckBox.Checked)
+                                {
+                                    foreach (AgentSystemPerformance agentSystemPerformance in historicalSource.GetAgentSystemPerformanceMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        agentSystemPerformanceReport.AgentSystemPerformances.Add(agentSystemPerformance);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
+                                }
+                                else
+                                {
+                                    foreach (AgentSystemPerformance agentSystemPerformance in historicalSource.GetAgentSystemPerformanceReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                    {
+                                        agentSystemPerformanceReport.AgentSystemPerformances.Add(agentSystemPerformance);
+                                    }
+
+                                    Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                eventLog.WriteEntry("Failed to pull data from source: " + historicalSource.Name + ". " + exception.Message, EventLogEntryType.Error);
+                                report.Pass = false;
+                            }
+
+                            if (report.Pass)
+                            {
+                                try
+                                {
+                                    if (multiMediaCheckBox.Checked)
+                                    {
+                                        Writer.WriteLine(contactTypeMMReport.Name);
+                                        Writer.WriteLine(contactTypeMMReport.ReportTimeString);
+                                        Writer.WriteLine(contactTypeMMReport.ColumnHeader);
+                                        foreach (ContactTypeMM contactType in contactTypeMMReport.ContactTypes)
+                                        {
+                                            Writer.WriteLine(contactType.ToString());
+                                        }
+                                        Writer.WriteLine(contactTypeMMReport.EndName);
+                                    }
+                                    else
+                                    {
+                                        Writer.WriteLine(contactTypeReport.Name);
+                                        Writer.WriteLine(contactTypeReport.ReportTimeString);
+                                        Writer.WriteLine(contactTypeReport.ColumnHeader);
+                                        foreach (ContactType contactType in contactTypeReport.ContactTypes)
+                                        {
+                                            Writer.WriteLine(contactType.ToString());
+                                        }
+                                        Writer.WriteLine(contactTypeReport.EndName);
+                                    }
+
+                                    Writer.WriteLine(agentContactTypeReport.Name);
+                                    Writer.WriteLine(agentContactTypeReport.ReportTimeString);
+                                    Writer.WriteLine(agentContactTypeReport.ColumnHeader);
+                                    foreach (AgentContactType agentContactType in agentContactTypeReport.AgentContactTypes)
+                                    {
+                                        Writer.WriteLine(agentContactType.ToString());
+                                    }
+                                    Writer.WriteLine(agentContactTypeReport.EndName);
+
+                                    Writer.WriteLine(agentSystemPerformanceReport.Name);
+                                    Writer.WriteLine(agentSystemPerformanceReport.ReportTimeString);
+                                    Writer.WriteLine(agentSystemPerformanceReport.ColumnHeader);
+
+                                    foreach (AgentSystemPerformance agentSystemPerformance in agentSystemPerformanceReport.AgentSystemPerformances)
+                                    {
+                                        Writer.WriteLine(agentSystemPerformance.ToString());
+                                    }
+
+                                    Writer.WriteLine(agentSystemPerformanceReport.EndName);
+
+                                    Writer.Flush();
+                                    Writer.Close();
+
+                                    //eventLog.WriteEntry("Successfully wrote data to file: " + FilePath + ". ", EventLogEntryType.Information);
+                                }
+                                catch (Exception exception)
+                                {
+                                    eventLog.WriteEntry("Failed to write data to file: " + FilePath + ". " + exception.Message, EventLogEntryType.Error);
+                                }
+
+                                /*
+                                List<HistoricalOutput> outputs = new List<HistoricalOutput>();
+
+                                if (ftpDataGridView.Rows.Count > 0)
+                                {
+                                    foreach(DataGridViewRow row in ftpDataGridView.SelectedRows)
+                                    {
+                                        outputs.Add(HistoricalOutputs.Where(x => x.Ftp.RemoteHost == ftpDataGridView.SelectedRows[0].Cells[1].Value.ToString() &&
+                                                                          x.Ftp.Port == Convert.ToInt32(ftpDataGridView.SelectedRows[0].Cells[3].Value)).FirstOrDefault());
+                                    }
+                                }
+                                */
+
+                                if (HistoricalOutputs.Count > 0)
                                 {
                                     try
                                     {
-                                        output.SendFile(FilePath, FileName);
-                                        report.Pass = true;
-                                        //MessageBox.Show("Successfully FTP'd!", "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        foreach (HistoricalOutput output in HistoricalOutputs)
+                                        {
+                                            try
+                                            {
+                                                output.SendFile(FilePath, FileName);
+                                                report.Pass = true;
+                                                //MessageBox.Show("Successfully FTP'd!", "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                if (exception?.InnerException?.Message != null)
+                                                {
+                                                    MessageBox.Show("Failed to send file to " + output.Name + ". " + exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                                }
+
+                                                MessageBox.Show(exception.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            }
+                                        }
                                     }
-                                    catch(Exception exception)
+                                    catch (Exception exception)
                                     {
                                         if (exception?.InnerException?.Message != null)
                                         {
-                                            MessageBox.Show("Failed to send file to " + output.Name + ". " + exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            MessageBox.Show(exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                         }
 
                                         MessageBox.Show(exception.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
                             }
-                            catch (Exception exception)
+
+                            /*
+                            foreach (HistoricalOutput historicalOutput in HistoricalOutputs)
                             {
-                                if (exception?.InnerException?.Message != null)
-                                {
-                                    MessageBox.Show(exception.Message + " " + exception.InnerException.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
+                                historicalOutput.SendFile(FilePath, FileName);
 
-                                MessageBox.Show(exception.Message, "Repost Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                report.Pass = true;
                             }
+                            */
                         }
-
-                        /*
-                        foreach (HistoricalOutput historicalOutput in HistoricalOutputs)
+                        catch (Exception exception)
                         {
-                            historicalOutput.SendFile(FilePath, FileName);
-
-                            report.Pass = true;
+                            eventLog.WriteEntry("Error: Unable to retrieve interval posting. " + exception.Message, EventLogEntryType.Error);
                         }
-                        */
+                    
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        eventLog.WriteEntry("Error: Unable to retrieve interval posting. " + exception.Message, EventLogEntryType.Error);
+                        e.Cancel = true;
+                        MessageBox.Show("Reposting has been stopped.", "Reposting Stopped", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        repostWorker.ReportProgress(0);
+                        break;
                     }
+                    double test = (CurrentReport * 100 / Reports.Count);
+                    Percentage = (CurrentReport * 100 / Reports.Count);
+                    repostWorker.ReportProgress(Percentage);
+                    CurrentReport++;
+                    PassLog += "Report Start Time: " + report.StartTime.ToString() + " Pass: " + report.Pass + "\n";
                 }
-                else
-                {
-                    e.Cancel = true;
-                    MessageBox.Show("Reposting has been stopped.", "Reposting Stopped", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    repostWorker.ReportProgress(0);
-                    break;
-                }
-                double test = (CurrentReport * 100/ Reports.Count);
-                Percentage = (CurrentReport * 100 / Reports.Count);
-                repostWorker.ReportProgress(Percentage);
-                CurrentReport++;
-                PassLog += "Report Start Time: " + report.StartTime.ToString() + " Pass: " + report.Pass + "\n";
+
+                eventLog.WriteEntry(PassLog, EventLogEntryType.Information);
+                MessageBox.Show(PassLog, "Completed Reposting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                repostWorker.ReportProgress(0);
             }
-
-            eventLog.WriteEntry(PassLog, EventLogEntryType.Information);
-            MessageBox.Show(PassLog, "Completed Reposting", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            repostWorker.ReportProgress(0);
-
+            multiMediaCheckBox.Invoke(new Action(() => multiMediaCheckBox.Enabled = true));
+            fifteenRadioButton.Invoke(new Action(() => fifteenRadioButton.Enabled = true));
+            thirtyMinuteRadioButton.Invoke(new Action(() => thirtyMinuteRadioButton.Enabled = true));
             repostButton.Invoke(new Action(() => repostButton.Enabled = true));
         }
 
@@ -620,6 +636,16 @@ namespace ethosIQ_Repost_Tool
             {
                 repostWorker.CancelAsync();
             }
+        }
+
+        private void fifteenRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            IntervalInMinutes = 15;
+        }
+
+        private void thirtyMinuteRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            IntervalInMinutes = 30;
         }
     }
 }

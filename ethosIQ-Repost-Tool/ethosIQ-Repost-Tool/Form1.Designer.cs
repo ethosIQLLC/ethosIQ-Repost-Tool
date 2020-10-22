@@ -61,16 +61,16 @@
             this.remoteFTPConfigurationGroupBox = new System.Windows.Forms.GroupBox();
             this.checkFTPConnectionButton = new System.Windows.Forms.Button();
             this.ftpDataGridView = new System.Windows.Forms.DataGridView();
-            this.loadConfigurationWorker = new System.ComponentModel.BackgroundWorker();
-            this.checkFTPConnectionWorker = new System.ComponentModel.BackgroundWorker();
-            this.checkCollectionDatabaseConnectionWorker = new System.ComponentModel.BackgroundWorker();
-            this.repostWorker = new System.ComponentModel.BackgroundWorker();
             this.DestinationName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FTPType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Host = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Directory = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Username = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.loadConfigurationWorker = new System.ComponentModel.BackgroundWorker();
+            this.checkFTPConnectionWorker = new System.ComponentModel.BackgroundWorker();
+            this.checkCollectionDatabaseConnectionWorker = new System.ComponentModel.BackgroundWorker();
+            this.repostWorker = new System.ComponentModel.BackgroundWorker();
             this.generateReportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.collectionDatabaseGroupBox.SuspendLayout();
@@ -139,6 +139,7 @@
             this.thirtyMinuteRadioButton.TabStop = true;
             this.thirtyMinuteRadioButton.Text = "30 Minutes";
             this.thirtyMinuteRadioButton.UseVisualStyleBackColor = true;
+            this.thirtyMinuteRadioButton.CheckedChanged += new System.EventHandler(this.thirtyMinuteRadioButton_CheckedChanged);
             // 
             // fifteenRadioButton
             // 
@@ -150,6 +151,7 @@
             this.fifteenRadioButton.TabStop = true;
             this.fifteenRadioButton.Text = "15 Minutes";
             this.fifteenRadioButton.UseVisualStyleBackColor = true;
+            this.fifteenRadioButton.CheckedChanged += new System.EventHandler(this.fifteenRadioButton_CheckedChanged);
             // 
             // intervalLabel
             // 
@@ -416,25 +418,6 @@
             this.ftpDataGridView.TabIndex = 0;
             this.ftpDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
             // 
-            // loadConfigurationWorker
-            // 
-            this.loadConfigurationWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadConfigurationWorker_DoWork);
-            // 
-            // checkFTPConnectionWorker
-            // 
-            this.checkFTPConnectionWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checkFTPConnectionWorker_DoWork);
-            // 
-            // checkCollectionDatabaseConnectionWorker
-            // 
-            this.checkCollectionDatabaseConnectionWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checkCollectionDatabaseConnectionWorker_DoWork);
-            // 
-            // repostWorker
-            // 
-            this.repostWorker.WorkerReportsProgress = true;
-            this.repostWorker.WorkerSupportsCancellation = true;
-            this.repostWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.repostWorker_DoWork);
-            this.repostWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.repostWorker_ProgressChanged);
-            // 
             // DestinationName
             // 
             this.DestinationName.HeaderText = "Name";
@@ -470,6 +453,25 @@
             this.Username.HeaderText = "Username";
             this.Username.Name = "Username";
             this.Username.ReadOnly = true;
+            // 
+            // loadConfigurationWorker
+            // 
+            this.loadConfigurationWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadConfigurationWorker_DoWork);
+            // 
+            // checkFTPConnectionWorker
+            // 
+            this.checkFTPConnectionWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checkFTPConnectionWorker_DoWork);
+            // 
+            // checkCollectionDatabaseConnectionWorker
+            // 
+            this.checkCollectionDatabaseConnectionWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.checkCollectionDatabaseConnectionWorker_DoWork);
+            // 
+            // repostWorker
+            // 
+            this.repostWorker.WorkerReportsProgress = true;
+            this.repostWorker.WorkerSupportsCancellation = true;
+            this.repostWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.repostWorker_DoWork);
+            this.repostWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.repostWorker_ProgressChanged);
             // 
             // Form1
             // 

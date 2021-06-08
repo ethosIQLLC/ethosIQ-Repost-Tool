@@ -1,4 +1,5 @@
-﻿using ethosIQ_Database;
+﻿using ethosIQ_Configuration;
+using ethosIQ_Database;
 using ethosIQ_Encrypt;
 using ethosIQ_Extensions;
 using ethosIQ_FTP;
@@ -473,6 +474,8 @@ namespace ethosIQ_Repost_Tool
 
                                     Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
                                 }
+
+                                report.Pass = true;
                             }
                             catch (Exception exception)
                             {

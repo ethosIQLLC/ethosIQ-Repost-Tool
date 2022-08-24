@@ -12,6 +12,7 @@ namespace ethosIQ_Repost_Tool
         private AgentContactTypeDatabaseDAO AgentContactTypeDatabaseDAO;
         private ContactTypeDatabaseDAO ContactTypeDatabaseDAO;
         private AgentSystemPerformanceDatabaseDAO AgentSystemPerformanceDatabaseDAO;
+        private AgentSignOnOffDatabaseDAO AgentSignOnOffDatabaseDAO;
 
         public HistoricalSource(string Name, Database Database)
         {
@@ -21,6 +22,7 @@ namespace ethosIQ_Repost_Tool
             ContactTypeDatabaseDAO = new ContactTypeDatabaseDAO(Database);
             AgentContactTypeDatabaseDAO = new AgentContactTypeDatabaseDAO(Database);
             AgentSystemPerformanceDatabaseDAO = new AgentSystemPerformanceDatabaseDAO(Database);
+            AgentSignOnOffDatabaseDAO = new AgentSignOnOffDatabaseDAO(Database);
         }
 
         public List<AgentContactType> GetAgentContactTypeReport(long StartTime, long EndTime)
@@ -51,6 +53,15 @@ namespace ethosIQ_Repost_Tool
         public List<AgentSystemPerformance> GetAgentSystemPerformanceMMReport(long StartTime, long EndTime)
         {
             return AgentSystemPerformanceDatabaseDAO.GetAgentSystemPerformanceMMData(StartTime, EndTime);
+        }
+
+        public List<AgentSignOnSignOff> GetAgentSignOnSignOffReport(long StartTime, long EndTime)
+        {
+            return AgentSignOnOffDatabaseDAO.GetAgentSignOnOffData(StartTime, EndTime);
+        }
+        public List<AgentSignOnSignOff> GetAgentSignOnSignOffMMReport(long StartTime, long EndTime)
+        {
+            return AgentSignOnOffDatabaseDAO.GetAgentSignOnSignOffMMData(StartTime, EndTime);
         }
     }
 }

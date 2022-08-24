@@ -71,6 +71,7 @@
             this.checkFTPConnectionWorker = new System.ComponentModel.BackgroundWorker();
             this.checkCollectionDatabaseConnectionWorker = new System.ComponentModel.BackgroundWorker();
             this.repostWorker = new System.ComponentModel.BackgroundWorker();
+            this.SignOnSignOffcheckBox = new System.Windows.Forms.CheckBox();
             this.generateReportGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.collectionDatabaseGroupBox.SuspendLayout();
@@ -80,6 +81,7 @@
             // 
             // generateReportGroupBox
             // 
+            this.generateReportGroupBox.Controls.Add(this.SignOnSignOffcheckBox);
             this.generateReportGroupBox.Controls.Add(this.repostProgressBar);
             this.generateReportGroupBox.Controls.Add(this.multiMediaCheckBox);
             this.generateReportGroupBox.Controls.Add(this.stopButton);
@@ -114,7 +116,7 @@
             this.multiMediaCheckBox.AutoSize = true;
             this.multiMediaCheckBox.Location = new System.Drawing.Point(197, 69);
             this.multiMediaCheckBox.Name = "multiMediaCheckBox";
-            this.multiMediaCheckBox.Size = new System.Drawing.Size(92, 20);
+            this.multiMediaCheckBox.Size = new System.Drawing.Size(112, 24);
             this.multiMediaCheckBox.TabIndex = 9;
             this.multiMediaCheckBox.Text = "Multimedia";
             this.multiMediaCheckBox.UseVisualStyleBackColor = true;
@@ -134,7 +136,7 @@
             this.thirtyMinuteRadioButton.AutoSize = true;
             this.thirtyMinuteRadioButton.Location = new System.Drawing.Point(71, 98);
             this.thirtyMinuteRadioButton.Name = "thirtyMinuteRadioButton";
-            this.thirtyMinuteRadioButton.Size = new System.Drawing.Size(89, 20);
+            this.thirtyMinuteRadioButton.Size = new System.Drawing.Size(112, 24);
             this.thirtyMinuteRadioButton.TabIndex = 7;
             this.thirtyMinuteRadioButton.TabStop = true;
             this.thirtyMinuteRadioButton.Text = "30 Minutes";
@@ -146,7 +148,7 @@
             this.fifteenRadioButton.AutoSize = true;
             this.fifteenRadioButton.Location = new System.Drawing.Point(71, 70);
             this.fifteenRadioButton.Name = "fifteenRadioButton";
-            this.fifteenRadioButton.Size = new System.Drawing.Size(89, 20);
+            this.fifteenRadioButton.Size = new System.Drawing.Size(112, 24);
             this.fifteenRadioButton.TabIndex = 6;
             this.fifteenRadioButton.TabStop = true;
             this.fifteenRadioButton.Text = "15 Minutes";
@@ -158,7 +160,7 @@
             this.intervalLabel.AutoSize = true;
             this.intervalLabel.Location = new System.Drawing.Point(8, 74);
             this.intervalLabel.Name = "intervalLabel";
-            this.intervalLabel.Size = new System.Drawing.Size(57, 16);
+            this.intervalLabel.Size = new System.Drawing.Size(73, 20);
             this.intervalLabel.TabIndex = 5;
             this.intervalLabel.Text = "Interval: ";
             // 
@@ -178,7 +180,7 @@
             this.toDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.toDatePicker.Location = new System.Drawing.Point(295, 32);
             this.toDatePicker.Name = "toDatePicker";
-            this.toDatePicker.Size = new System.Drawing.Size(182, 22);
+            this.toDatePicker.Size = new System.Drawing.Size(182, 26);
             this.toDatePicker.TabIndex = 3;
             // 
             // fromDatePicker
@@ -187,7 +189,7 @@
             this.fromDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.fromDatePicker.Location = new System.Drawing.Point(58, 32);
             this.fromDatePicker.Name = "fromDatePicker";
-            this.fromDatePicker.Size = new System.Drawing.Size(182, 22);
+            this.fromDatePicker.Size = new System.Drawing.Size(182, 26);
             this.fromDatePicker.TabIndex = 2;
             this.fromDatePicker.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
@@ -196,7 +198,7 @@
             this.fromLabel.AutoSize = true;
             this.fromLabel.Location = new System.Drawing.Point(7, 37);
             this.fromLabel.Name = "fromLabel";
-            this.fromLabel.Size = new System.Drawing.Size(45, 16);
+            this.fromLabel.Size = new System.Drawing.Size(58, 20);
             this.fromLabel.TabIndex = 1;
             this.fromLabel.Text = "From: ";
             this.fromLabel.Click += new System.EventHandler(this.label1_Click_1);
@@ -206,7 +208,7 @@
             this.toLabel.AutoSize = true;
             this.toLabel.Location = new System.Drawing.Point(261, 37);
             this.toLabel.Name = "toLabel";
-            this.toLabel.Size = new System.Drawing.Size(28, 16);
+            this.toLabel.Size = new System.Drawing.Size(33, 20);
             this.toLabel.TabIndex = 0;
             this.toLabel.Text = "To:";
             this.toLabel.Click += new System.EventHandler(this.label1_Click);
@@ -253,7 +255,7 @@
             this.connectedLabel.AutoSize = true;
             this.connectedLabel.Location = new System.Drawing.Point(344, 80);
             this.connectedLabel.Name = "connectedLabel";
-            this.connectedLabel.Size = new System.Drawing.Size(91, 16);
+            this.connectedLabel.Size = new System.Drawing.Size(112, 20);
             this.connectedLabel.TabIndex = 14;
             this.connectedLabel.Text = "Disconnected";
             // 
@@ -272,7 +274,7 @@
             this.statusLabel.AutoSize = true;
             this.statusLabel.Location = new System.Drawing.Point(287, 80);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(51, 16);
+            this.statusLabel.Size = new System.Drawing.Size(67, 20);
             this.statusLabel.TabIndex = 12;
             this.statusLabel.Text = "Status: ";
             // 
@@ -281,7 +283,7 @@
             this.passwordTextBox.Location = new System.Drawing.Point(344, 48);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(149, 22);
+            this.passwordTextBox.Size = new System.Drawing.Size(149, 26);
             this.passwordTextBox.TabIndex = 11;
             this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
             // 
@@ -289,7 +291,7 @@
             // 
             this.usernameTextBox.Location = new System.Drawing.Point(344, 19);
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(149, 22);
+            this.usernameTextBox.Size = new System.Drawing.Size(149, 26);
             this.usernameTextBox.TabIndex = 10;
             // 
             // passwordLabel
@@ -297,7 +299,7 @@
             this.passwordLabel.AutoSize = true;
             this.passwordLabel.Location = new System.Drawing.Point(264, 51);
             this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(74, 16);
+            this.passwordLabel.Size = new System.Drawing.Size(93, 20);
             this.passwordLabel.TabIndex = 9;
             this.passwordLabel.Text = "Password: ";
             // 
@@ -306,7 +308,7 @@
             this.usernameLabel.AutoSize = true;
             this.usernameLabel.Location = new System.Drawing.Point(261, 23);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(77, 16);
+            this.usernameLabel.Size = new System.Drawing.Size(96, 20);
             this.usernameLabel.TabIndex = 8;
             this.usernameLabel.Text = "Username: ";
             // 
@@ -314,28 +316,28 @@
             // 
             this.portTextBox.Location = new System.Drawing.Point(125, 108);
             this.portTextBox.Name = "portTextBox";
-            this.portTextBox.Size = new System.Drawing.Size(121, 22);
+            this.portTextBox.Size = new System.Drawing.Size(121, 26);
             this.portTextBox.TabIndex = 7;
             // 
             // hostTextBox
             // 
             this.hostTextBox.Location = new System.Drawing.Point(125, 77);
             this.hostTextBox.Name = "hostTextBox";
-            this.hostTextBox.Size = new System.Drawing.Size(121, 22);
+            this.hostTextBox.Size = new System.Drawing.Size(121, 26);
             this.hostTextBox.TabIndex = 6;
             // 
             // dataSourceTextBox
             // 
             this.dataSourceTextBox.Location = new System.Drawing.Point(125, 48);
             this.dataSourceTextBox.Name = "dataSourceTextBox";
-            this.dataSourceTextBox.Size = new System.Drawing.Size(121, 22);
+            this.dataSourceTextBox.Size = new System.Drawing.Size(121, 26);
             this.dataSourceTextBox.TabIndex = 5;
             // 
             // databaseTypeTextBox
             // 
             this.databaseTypeTextBox.Location = new System.Drawing.Point(125, 19);
             this.databaseTypeTextBox.Name = "databaseTypeTextBox";
-            this.databaseTypeTextBox.Size = new System.Drawing.Size(121, 22);
+            this.databaseTypeTextBox.Size = new System.Drawing.Size(121, 26);
             this.databaseTypeTextBox.TabIndex = 4;
             // 
             // portLabel
@@ -343,7 +345,7 @@
             this.portLabel.AutoSize = true;
             this.portLabel.Location = new System.Drawing.Point(81, 111);
             this.portLabel.Name = "portLabel";
-            this.portLabel.Size = new System.Drawing.Size(38, 16);
+            this.portLabel.Size = new System.Drawing.Size(50, 20);
             this.portLabel.TabIndex = 3;
             this.portLabel.Text = "Port: ";
             // 
@@ -352,7 +354,7 @@
             this.hostLabel.AutoSize = true;
             this.hostLabel.Location = new System.Drawing.Point(77, 80);
             this.hostLabel.Name = "hostLabel";
-            this.hostLabel.Size = new System.Drawing.Size(42, 16);
+            this.hostLabel.Size = new System.Drawing.Size(55, 20);
             this.hostLabel.TabIndex = 2;
             this.hostLabel.Text = "Host: ";
             // 
@@ -361,7 +363,7 @@
             this.dataSourceLabel.AutoSize = true;
             this.dataSourceLabel.Location = new System.Drawing.Point(30, 51);
             this.dataSourceLabel.Name = "dataSourceLabel";
-            this.dataSourceLabel.Size = new System.Drawing.Size(89, 16);
+            this.dataSourceLabel.Size = new System.Drawing.Size(113, 20);
             this.dataSourceLabel.TabIndex = 1;
             this.dataSourceLabel.Text = "Data Source: ";
             this.dataSourceLabel.Click += new System.EventHandler(this.dataSourceLabel_Click);
@@ -371,7 +373,7 @@
             this.databaseTypeLabel.AutoSize = true;
             this.databaseTypeLabel.Location = new System.Drawing.Point(10, 22);
             this.databaseTypeLabel.Name = "databaseTypeLabel";
-            this.databaseTypeLabel.Size = new System.Drawing.Size(109, 16);
+            this.databaseTypeLabel.Size = new System.Drawing.Size(132, 20);
             this.databaseTypeLabel.TabIndex = 0;
             this.databaseTypeLabel.Text = "Database Type: ";
             this.databaseTypeLabel.Click += new System.EventHandler(this.label1_Click_2);
@@ -473,9 +475,19 @@
             this.repostWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.repostWorker_DoWork);
             this.repostWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.repostWorker_ProgressChanged);
             // 
+            // SignOnSignOffcheckBox
+            // 
+            this.SignOnSignOffcheckBox.AutoSize = true;
+            this.SignOnSignOffcheckBox.Location = new System.Drawing.Point(197, 98);
+            this.SignOnSignOffcheckBox.Name = "SignOnSignOffcheckBox";
+            this.SignOnSignOffcheckBox.Size = new System.Drawing.Size(147, 24);
+            this.SignOnSignOffcheckBox.TabIndex = 11;
+            this.SignOnSignOffcheckBox.Text = "SignOn/SignOff";
+            this.SignOnSignOffcheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(521, 588);
             this.Controls.Add(this.remoteFTPConfigurationGroupBox);
@@ -546,6 +558,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Directory;
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
         private System.Windows.Forms.DataGridViewTextBoxColumn Username;
+        private System.Windows.Forms.CheckBox SignOnSignOffcheckBox;
     }
 }
 

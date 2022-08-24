@@ -172,6 +172,14 @@ namespace ethosIQ_Repost_Tool
 
             try
             {
+                SignOnSignOffcheckBox.Invoke(new Action(() => SignOnSignOffcheckBox.Checked = Convert.ToBoolean(ConfigurationManager.AppSettings["SignOnOff"].ToString())));
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Sign On/Sign Off Report Configuration", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            try
+            {
                 IntervalInMinutes = Convert.ToInt32(ConfigurationManager.AppSettings["Interval"].ToString());
 
                 if(IntervalInMinutes == 15)
@@ -345,6 +353,7 @@ namespace ethosIQ_Repost_Tool
             fifteenRadioButton.Invoke(new Action(() => fifteenRadioButton.Enabled = false));
             thirtyMinuteRadioButton.Invoke(new Action(() => thirtyMinuteRadioButton.Enabled = false));
             repostButton.Invoke(new Action(() => repostButton.Enabled = false));
+            SignOnSignOffcheckBox.Invoke(new Action(() => SignOnSignOffcheckBox.Enabled = false));
 
             List<RepostReport> Reports = new List<RepostReport>();
 
@@ -403,6 +412,7 @@ namespace ethosIQ_Repost_Tool
                             ContactTypeMMReport contactTypeMMReport;
                             AgentContactTypeReport agentContactTypeReport;
                             AgentSystemPerformanceReport agentSystemPerformanceReport;
+                            AgentSignOnOffReport agentSignOnOffReport;
 
                             string FilePath = LocalDirectory + @"\" + report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
                             string FileName = report.StartTime.ToString("MMddyy") + "." + report.StartTime.ToString("HHmm");
@@ -411,6 +421,7 @@ namespace ethosIQ_Repost_Tool
                             contactTypeMMReport = new ContactTypeMMReport(report.StartTime);
                             agentContactTypeReport = new AgentContactTypeReport(report.StartTime);
                             agentSystemPerformanceReport = new AgentSystemPerformanceReport(report.StartTime);
+                            agentSignOnOffReport = new AgentSignOnOffReport(report.StartTime);
 
                             Writer = new StreamWriter(FilePath);
 
@@ -474,6 +485,29 @@ namespace ethosIQ_Repost_Tool
 
                                     Console.WriteLine(historicalSource.Name + " - AgentSystemPerformance Count: " + agentSystemPerformanceReport.AgentSystemPerformances.Count);
                                 }
+                                if(SignOnSignOffcheckBox.Checked)
+                                {
+                                    if (multiMediaCheckBox.Checked)
+                                    {
+                                        foreach (AgentSignOnSignOff agentSignOnSignOff in historicalSource.GetAgentSignOnSignOffMMReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                        {
+                                            agentSignOnOffReport.AgentSignOnSignOffs.Add(agentSignOnSignOff);
+                                        }
+
+                                        Console.WriteLine(historicalSource.Name + " - AgentSignOnSignOff Count: " + agentContactTypeReport.AgentContactTypes.Count);
+                                    }
+                                    else
+                                    {
+                                        foreach (AgentSignOnSignOff agentSignOnSignOff in historicalSource.GetAgentSignOnSignOffReport(report.StartTimeSeconds, report.EndTimeSeconds - 1))
+                                        {
+                                            agentSignOnOffReport.AgentSignOnSignOffs.Add(agentSignOnSignOff);
+                                        }
+
+                                        Console.WriteLine(historicalSource.Name + " - AgentSignOnSignOff Count: " + agentContactTypeReport.AgentContactTypes.Count);
+                                    }
+                                }
+                                
+                                
 
                                 report.Pass = true;
                             }
@@ -529,6 +563,21 @@ namespace ethosIQ_Repost_Tool
                                     }
 
                                     Writer.WriteLine(agentSystemPerformanceReport.EndName);
+
+                                    
+                                    if(SignOnSignOffcheckBox.Checked)
+                                    {
+                                        Writer.WriteLine(agentSignOnOffReport.Name);
+                                        Writer.WriteLine(agentSignOnOffReport.ReportTimeString);
+                                        Writer.WriteLine(agentSignOnOffReport.ColumnHeader);
+                                        foreach (AgentSignOnSignOff agentSignOnOff in agentSignOnOffReport.AgentSignOnSignOffs)
+                                        {
+                                            Writer.WriteLine(agentSignOnOff.ToString());
+                                        }
+
+                                        Writer.WriteLine(agentSignOnOffReport.EndName);
+                                    }
+                                   
 
                                     Writer.Flush();
                                     Writer.Close();
@@ -625,6 +674,7 @@ namespace ethosIQ_Repost_Tool
             fifteenRadioButton.Invoke(new Action(() => fifteenRadioButton.Enabled = true));
             thirtyMinuteRadioButton.Invoke(new Action(() => thirtyMinuteRadioButton.Enabled = true));
             repostButton.Invoke(new Action(() => repostButton.Enabled = true));
+            SignOnSignOffcheckBox.Invoke(new Action(() => SignOnSignOffcheckBox.Enabled = true));
         }
 
         private void repostWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
